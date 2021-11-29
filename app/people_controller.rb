@@ -6,8 +6,8 @@ class PeopleController
   def normalize
     
     puts "\n"
-    array2= params[:dollar_format].split('$')
-    array2.collect(&:strip!)
+    @cleaner = CleanerController.new
+    array2= @cleaner.clean_params (params[:dollar_format].split('$'))
 
     city2 = array2[0]
     birthdate2= array2[1]
@@ -23,14 +23,10 @@ class PeopleController
     bruen = array2[8]
     rigo = array2[9].split("\n")[0]
 
-      
-
-
-    puts "\n"
-    puts params[:order]
-    puts "\n"
-    array= params[:percent_format].split('%')
-    array.collect(&:strip!)
+    
+    #puts params[:order]
+    
+    array= @cleaner.clean_params (params[:percent_format].split('%'))
     first_name = array[0]
     city= array[1]
     birthdate = array[2].split("\n")[0]
@@ -45,26 +41,9 @@ class PeopleController
 
     
     puts "\n"
+    @code = CodeController.new
+    la= @code.add_community(la)
 
-    redirect_to date_controller
-
-    if la
-      la='Los Angeles'
-    end
-    
-    a = [elliot,new_york,compute(date2)]
-    puts a.join(', ')
-
-    b = [mckayla,atlanta,compute(date)]
-    puts b.join(', ')
-
-    c = [rhia,'Los Angeles',compute(date3)]
-    puts c.join(', ')
-
-    
-
-    d = [rigo,new_york,compute(date4)]
-    puts d.join(', ')
 
     return eval(%q{["#{elliot}, #{new_york}, #{compute(date2)}","#{mckayla}, #{atlanta}, #{compute(date)}","#{rhia}, #{la}, #{compute(date3)}","#{rigo}, #{new_york}, #{compute(date4)}"]})
     
@@ -90,8 +69,3 @@ class PeopleController
 
   attr_reader :params
 end
-
-
-# first_name % city % birthdate
-# Mckayla % Atlanta % 1986-05-29
-# Elliot % New York City % 1947-05-04
